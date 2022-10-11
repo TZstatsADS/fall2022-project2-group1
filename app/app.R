@@ -54,23 +54,24 @@ if (!require("lubridate")) {
 ############################### Data Processing #######################
 
 # Import data from updated job nyc
-nyc_job <- read.csv("../data/NYC_Jobs_updated.csv") #Sangmin's data
-ds= NYC_Jobs <- read.csv("../data/NYC_Jobs.csv") #Xiaoyuan's data
+nyc_job <- read.csv("NYC_Jobs_updated.csv") #Sangmin's data
+ds= NYC_Jobs <- read.csv("NYC_Jobs.csv") #Xiaoyuan's data
 job_data_updated <- nyc_job
 
 # Data processing
+
 ds["number_of_positions"] <- (ds$X..Of.Positions )/2
 ds$Posting.Date <- as.Date(ds$Posting.Date, 
                            "%m/%d/%Y")
 
-# Subset data
-selected_job <- reactive({
-  ds %>%
-    filter(
-      Job.Category == input$Job.Category, 
-      Career.Level == input$Career.Level
-    )
-})
+nyc_job["median_salary"] <- (nyc_job$Salary.Range.To + nyc_job$Salary.Range.From )/2
+
+nyc_job <- nyc_job[, which(colnames(nyc_job) %in% c("Posting.Date", "Job.Category", "Career.Level", "median_salary"))]
+nyc_job <- na.omit(nyc_job)
+nyc_job$Posting.Date <- as.character(nyc_job$Posting.Date)
+nyc_job$Posting.Date <- as.Date(nyc_job$Posting.Date, "%m/%d/%Y")
+
+nyc_job2 <- nyc_job
 
 ###### Degree data processing ######
 job_data_updated <- job_data_updated %>%
@@ -112,7 +113,8 @@ ui <- navbarPage(
         height = 120,
         tags$p(
           style = "padding: 5%; background-color: white; font-family: alegreya; font-size: 120%",
-          "The Covid-19 has had a significant impact on job market."
+          "Covid-19 has had a significant impact on job market, especially in New York City. This App helps companies and managers to understand the hiring trends in NYC. Prior to the declaration of COVID-19 as a pandemic, the NYC job market, as indicated by the number of job postings indicated a strong hiring trend. During COVID-19, companies faced a plethora of new risks highlighted by fewer job postings in mid-2020. With time, the firms adjusted to the new environment with Work From Home (WFH) being a part of the solution. This helped the employers increase hiring activity as seen by the increased number of job postings.
+          The App further underscores trends in minimum degree requirement of the job, and compensation change across various job types over time."
         )
       )
     )
@@ -133,18 +135,11 @@ ui <- navbarPage(
                     choices = unique(nyc_job$Career.Level),
                     selected = "Experienced"),
         
-        # Select date range to be plotted
-        #dateRangeInput("Posting.Date", strong("Date range"), start = "2018-01-01", end = "2020-12-31",
-        #               min = "2018-01-01", max = "2020-12-31"),
-        
-        # Select whether to overlay smooth trend line
-        checkboxInput(inputId = "smoother", label = strong("Overlay smooth trend line"), value = FALSE),
-        
       ),
       
       # Output: Description, scatterplot
       mainPanel(
-        plotOutput(outputId = "scatterplot1", height = "300px"),
+        plotOutput(outputId = "scatterplot1", height = "500px"),
       )
     )
   ),
@@ -155,24 +150,20 @@ ui <- navbarPage(
       sidebarPanel(
         
         # Select job category to plot
-        selectInput(inputId = "Job.Category", label = strong("Job type"),
-                    choices = unique(ds$Job.Category),
+        selectInput(inputId = "Job.Category2", label = strong("Job type"),
+                    choices = unique(nyc_job2$Job.Category),
                     selected = "Social Services"),
         
         # Select level of job to plot
-        selectInput(inputId = "Career.Level", label = strong("Job Level"),
-                    choices = unique(ds$Career.Level),
+        selectInput(inputId = "Career.Level2", label = strong("Job Level"),
+                    choices = unique(nyc_job2$Career.Level),
                     selected = "Experienced"),
-        dateRangeInput("Posting.Date", strong("Date range"), start = "2018-01-01", end = "2020-12-31",
-                       min = "2018-01-01", max = "2020-12-31"),
         
-        # Select whether to overlay smooth trend line
-        checkboxInput(inputId = "smoother", label = strong("Overlay smooth trend line"), value = FALSE),
         
       ),
       # Output: Description, scatterplot
       mainPanel(
-        plotOutput(outputId = "scatterplot2", height = "300px"),
+        plotOutput(outputId = "scatterplot2", height = "500px"),
       )
     )
   ),
@@ -230,10 +221,6 @@ ui <- navbarPage(
 shinyServer <- function(input, output, session) {
   
   #################### Salary ####################
-  # Data processing
-  nyc_job["median_salary"] <- (nyc_job$Salary.Range.To - nyc_job$Salary.Range.From )/2
-  nyc_job$Posting.Date <- as.Date(nyc_job$Posting.Date, 
-                                  "%m/%d/%Y")
   
   # Subset data
   selected_job <- reactive({
@@ -258,13 +245,21 @@ shinyServer <- function(input, output, session) {
   
   ################### Position ###################
   
+  # Subset data
+  selected_job2 <- reactive({
+    nyc_job2 %>%
+      filter(
+        Job.Category == input$Job.Category2, 
+        Career.Level == input$Career.Level2
+      )
+  })
   
   # Create scatterplot object the plotOutput function is expecting
   output$scatterplot2 <- renderPlot({
     color = "#434343"
     par(mar = c(4, 4, 1, 1))
-    plot(x = selected_job()$Posting.Date, y = selected_job()$number_of_positions,
-         xlab = "Date", ylab = "Change of number of positions", col = color, fg = color, col.lab = color, col.axis = color)
+    plot(x=selected_job2()$Posting.Date, y=selected_job2()$X..Of.Positions,
+         xlab = "Change of number of positions", ylab = "Date", col = color, fg = color, col.lab = color, col.axis = color)
     
   })
   
