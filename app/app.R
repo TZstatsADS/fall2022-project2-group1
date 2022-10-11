@@ -107,12 +107,13 @@ ui <- navbarPage(
       absolutePanel(
         style = "background-color: white",
         top = "40%",
-        left = "25%",
-        right = "25%",
+        left = "20%",
+        right = "20%",
         height = 120,
         tags$p(
           style = "padding: 5%; background-color: white; font-family: alegreya; font-size: 120%",
-          "The Covid-19 has had a significant impact on job market."
+          "The Covid-19 has had a significant impact on job market, especially in New York City. This App helps companies and managers to understand the hiring trends in NYC. Prior to the declaration of COVID-19 as a pandemic, the NYC job market, as indicated by the number of job postings indicated a strong hiring trend. During COVID-19, companies faced a plethora of new risks highlighted by fewer job postings in mid-2020. With time, the firms adjusted to the new environment with Work From Home (WFH) being a part of the solution. This helped the employers increase hiring activity as seen by the increased number of job postings.
+          The App further underscores trends in minimum degree requirement of the job, and compensation change across various job types over time."
         )
       )
     )
