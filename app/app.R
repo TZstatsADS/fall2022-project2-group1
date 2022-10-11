@@ -108,8 +108,8 @@ ui <- navbarPage(
       absolutePanel(
         style = "background-color: white",
         top = "40%",
-        left = "25%",
-        right = "25%",
+        left = "20%",
+        right = "20%",
         height = 120,
         tags$p(
           style = "padding: 5%; background-color: white; font-family: alegreya; font-size: 120%",
