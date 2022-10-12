@@ -54,15 +54,10 @@ if (!require("lubridate")) {
 ############################### Data Processing #######################
 
 # Import data from updated job nyc
-nyc_job <- read.csv("NYC_Jobs_updated.csv") #Sangmin's data
-ds= NYC_Jobs <- read.csv("NYC_Jobs.csv") #Xiaoyuan's data
-job_data_updated <- nyc_job
+nyc_job <- read.csv("../data/NYC_Jobs_updated.csv") #Sangmin's data
+job_data_updated <- nyc_job # make copy
 
-# Data processing
-
-ds["number_of_positions"] <- (ds$X..Of.Positions )/2
-ds$Posting.Date <- as.Date(ds$Posting.Date, 
-                           "%m/%d/%Y")
+### Position and Salary Data processing ###
 
 nyc_job["median_salary"] <- (nyc_job$Salary.Range.To + nyc_job$Salary.Range.From )/2
 
@@ -71,7 +66,7 @@ nyc_job <- na.omit(nyc_job)
 nyc_job$Posting.Date <- as.character(nyc_job$Posting.Date)
 nyc_job$Posting.Date <- as.Date(nyc_job$Posting.Date, "%m/%d/%Y")
 
-nyc_job2 <- nyc_job
+nyc_job2 <- nyc_job # make copy
 
 ###### Degree data processing ######
 job_data_updated <- job_data_updated %>%
