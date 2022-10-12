@@ -26,8 +26,8 @@ Term: Fall 2022
 	+ Tianyu Yao
 	+ Xiaoyuan Ge
 
-+ **Shiny App Link** ([to be updated](https://ytyky.shinyapps.io/nycjobs/
-))
++ **Shiny App Link** (https://ytyky.shinyapps.io/nycjobs/
+)
 
 + **Project summary**: The project aims to highlight the impact of Covid-19 on NYC Job Market. The data was sourced from NYC Open Data by Department of Citywide Administrative Services (DCAS) website.
 	+ Covid-19 has had a significant impact on job market, especially in New York City. This App helps companies and managers to understand the hiring trends in NYC. Prior to the declaration of COVID-19 as a pandemic, the NYC job market, as indicated by the number of job postings indicated a strong hiring trend. During COVID-19, companies faced a plethora of new risks highlighted by fewer job postings in mid-2020. With time, the firms adjusted to the new environment with Work From Home (WFH) being a part of the solution. This helped the employers increase hiring activity as seen by the increased number of job postings. The App further underscores trends in minimum degree requirement of the job, and compensation change across various job types over time.
